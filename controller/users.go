@@ -1,6 +1,10 @@
 package controller
 
 import (
+	"Api-Aula_1/models"
+	"Api-Aula_1/responses"
+	"encoding/json"
+	"io"
 	"log"
 	"net/http"
 )
@@ -9,8 +13,24 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	// Ler os dados do corpo da requisição
 	// Fazer o unmarshall dos dados para uma struct de usuário
 	// Fazer os tratamentos necessários (validação, etc.)
-	w.WriteHeader(http.StatusCreated)
-	_, _ = w.Write([]byte("User created successfully"))
+
+	bodyRequest, err := io.ReadAll(r.Body)
+	if err != nil {
+		responses.Err(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+	var newUser models.Users
+	if err := json.Unmarshal(bodyRequest, &newUser); err != nil {
+		responses.Err(w, http.StatusBadRequest, err)
+		return
+	}
+	log.Println(newUser)
+	if err = newUser.Prepare("create"); err != nil {
+		responses.Err(w, http.StatusBadRequest, err)
+		return
+	}
+
+	responses.JSON(w, http.StatusCreated, newUser)
 }
 
 func FetchUser(w http.ResponseWriter, r *http.Request) {
