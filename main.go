@@ -1,20 +1,16 @@
 package main
 
 import (
+	"Api-Aula_1/config"
 	"Api-Aula_1/router"
 	"log"
 	"net/http"
 	"os"
-
-	"github.com/joho/godotenv"
 )
 
 func main() {
 
-	err := godotenv.Load()
-	if err != nil {
-		log.Println("Warning: .env not found")
-	}
+	config.LoadEnv()
 
 	apiKey := os.Getenv("GOOGLE_API_KEY")
 	if apiKey == "" {
@@ -22,7 +18,6 @@ func main() {
 	}
 
 	r := router.New()
-	const addr = ":8080"
-	log.Printf("Starting server on %s\n", addr)
-	log.Fatal(http.ListenAndServe(addr, r))
+	log.Printf("Starting server on %s\n", config.Port)
+	log.Fatal(http.ListenAndServe(config.Port, r))
 }

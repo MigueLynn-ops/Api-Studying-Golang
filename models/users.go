@@ -31,7 +31,7 @@ func (u *Users) Prepare(step string) error {
 func (u *Users) Validate(step string) error {
 	// Validar se o username não está vazio
 	if u.Username == "" {
-		return fmt.Errorf("username is required")
+		return fmt.Errorf("Name is required")
 	}
 	// Validar se o email não está vazio
 	if u.Email == "" {
